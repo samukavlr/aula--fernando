@@ -1,7 +1,8 @@
-const express = require('express')
+const express = require('express');
+const bcrypt= require('bcryptjs');
 const app = express();
-const port = 4500;
 const User =require('./models/User');
+const port = 4500;
 
 app.use(express.json());
 app.use(express.urlencoded({extended:true}))
@@ -54,9 +55,15 @@ app.get('/users/:id', async(req,res)=>{
 })
 
 /////////////////// cadastro de usuario////////////////////
+
 app.post('/user',async(req,res)=>{
     // const {name, email, gender, password}=req.body
-    await User.create(req.body)
+    var dados = req.body;
+    console.log(dados);
+    dados.password = await bcrypt.hash(dados.password,8)
+    console.log(dados.password);
+
+    await User.create(dados)
     .then(()=>{
         return res.json({
             erro:false,
@@ -70,6 +77,7 @@ app.post('/user',async(req,res)=>{
     })
 })
 /////////////////// ALTERAÇÃO DE CADASTRO////////////////////
+
 app.put('/user',async(req,res)=>{
     const {id}= req.body;
 
@@ -101,6 +109,32 @@ app.delete("/user/:id", async (req,res)=>{
         })
     })
 })
+app.get("/login",async(req,res)=>{
+    const user= await User.findOne({
+        attributes:['id','name', 'email', 'gender','password'],
+        where:{
+            email:req.body.email
+        }
+    })
+    if(user==null){
+        return res.status(400).json({
+            erro:true,
+            mensagem:"Erro: Usuario ou senha incorreto!!"
+        })
+    }
+    if(!(await bcrypt.compare(req.body.password, user.password))){
+        return res.status(400).json({
+            erro:true,
+            mensagem:"Erro: Email ou senha incorreta"
+        })
+    }
+    return res.json({
+        erro:false,
+        mensagem:"login realizado com sucesso!!!",
+        
+    })
+ })
+
 
 app.listen(port,()=>{
     console.log(`Servidor inicado na porta ${port}http://localhost:${port} `)
