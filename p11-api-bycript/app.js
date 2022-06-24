@@ -1,8 +1,9 @@
 const express = require('express');
 const bcrypt= require('bcryptjs');
 const app = express();
-const User =require('./models/User');
-const port = 4500;
+const User = require('./models/User');
+require('dotenv').config()
+
 
 app.use(express.json());
 app.use(express.urlencoded({extended:true}))
@@ -25,7 +26,7 @@ app.get("/users",async (req,res)=>{
     }).catch((err)=>{
         return res.status(400).json({
             erro:true,
-            mensagem: `Erro: ${err} ou Nenhum Ususário encontrado`
+            mensagem: `Erro: ${err} ou Nenhum Usuário encontrado`
         })
 
     })
@@ -116,7 +117,7 @@ app.get("/login",async(req,res)=>{
             email:req.body.email
         }
     })
-    if(user==null){
+    if(user===null){
         return res.status(400).json({
             erro:true,
             mensagem:"Erro: Usuario ou senha incorreto!!"
@@ -128,16 +129,35 @@ app.get("/login",async(req,res)=>{
             mensagem:"Erro: Email ou senha incorreta"
         })
     }
-    return res.json({
-        erro:false,
+    return res.json({   
         mensagem:"login realizado com sucesso!!!",
-        
+        id: user.id,
+        name: user.name,
+        email:user.email,
+        gender:user.gender 
     })
+ })
+ app.put("/user-senha",async(req,res)=>{
+     const {id,password}= req.body;
+     var senhaCrypt = await bcrypt.hash(password,8);
+
+     await User.update({password: senhaCrypt}, {where:{id:id}})
+     .then(()=>{
+         return res.json({
+             erro:false,
+             mensagem: "Senha edita com sucesso!"
+         })
+     }).catch((err)=>{
+         return res.status(400).json({
+             erro: true,
+             mensagem: `Erro: ${err}... A senha não foi alterada!!!`
+         })
+     })
  })
 
 
-app.listen(port,()=>{
-    console.log(`Servidor inicado na porta ${port}http://localhost:${port} `)
+app.listen(process.env.PORT,()=>{
+    console.log(`Servidor inicado na porta ${process.env.PORT}http://localhost:${process.env.PORT} `)
 })
 
 
