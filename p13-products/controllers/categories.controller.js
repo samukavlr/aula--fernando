@@ -1,16 +1,8 @@
-const express = require('express');
-const app = express();
-const Categories = require('./models/Categories');
-require('dotenv').config()
+const Categories = require('../models/Categories')
 
-app.use(express.json());
-app.use(express.urlencoded({extended:true}))
 
-app.get("/", function (request, response) {
-    response.send("Serviço API Rest iniciada...");
-})
 ////// LISTA /////////
-app.get("/categories", async (req, res) =>{
+exports.findAll= async (req, res) =>{
     await Categories.findAll({
         attributes: ['id', 'name', 'description', ],
         order:[['name', 'ASC']]
@@ -27,13 +19,13 @@ app.get("/categories", async (req, res) =>{
         })
     })
 
-})
-/////// MOSTRAR /////
-app.get('/categories/:id', async (req, res) => {
+}
+/////// MOSTRAR 1/////
+exports.findOne= async (req, res) => {
     const { id } = req.params;
     try {
-        await User.findAll({ where: {id: id}})
-        const categorias = await User.findByPk(id);
+        // await Categories.findAll({ where: {id: id}})
+        const categorias = await Categories.findByPk(id);
         if(!categorias){
             return res.status(400).json({
                 erro: true,
@@ -50,11 +42,11 @@ app.get('/categories/:id', async (req, res) => {
             mensagem: `Erro: ${err}`
         })
     }
-})
-////////Criar///////
-app.post("/categories", async (req, res) =>{
-    const {name, id,  description } = req.body;
-    await Categories.create(req.body)
+}
+////////CRIAR///////
+exports.create= async (req, res) =>{
+    const dados = req.body;
+    await Categories.create(dados)
     .then( ()=>{
         return res.json({
             erro:false,
@@ -67,9 +59,9 @@ app.post("/categories", async (req, res) =>{
 
         })
     })
-})
-/////ALTERAR//////
-app.put("/categories", async (req, res) => {
+}
+///////////ALTERAR/////////////
+ exports.update= async (req, res) => {
     const { id } = req.body;
 
     await Categories.update(req.body, {where: {id}})
@@ -84,8 +76,9 @@ app.put("/categories", async (req, res) => {
             mensagem: `Erro: Categoria não alterado ...${err}`
         })
     })
-})
-app.delete("/categories/:id", async (req, res) => {
+}
+////////////DELETAR/////////////////
+exports.delete= async (req, res) => {
     const { id } = req.params;
     await Categories.destroy({ where: {id}})
     .then( () => {
@@ -99,13 +92,5 @@ app.delete("/categories/:id", async (req, res) => {
             mensagem: `Erro: ${err} Categoria não apagado...`
         })
     })
-})
-
-
-
-
-
-app.listen(process.env.PORT,()=>{
-    console.log(`Servidor inicado na porta ${process.env.PORT}http://localhost:${process.env.PORT} `)
-})
+}
 

@@ -2,7 +2,8 @@ const Sequelize =require('sequelize');
 const db= require('../database/db')
 
 
-const Categories = db.define('samuel_categories',{
+
+const Users = db.define('samuel-users',{
     id:{
         type:Sequelize.INTEGER,
         autoIncrement:true,
@@ -13,21 +14,28 @@ const Categories = db.define('samuel_categories',{
         type:Sequelize.STRING(50),
         allowNull:false
     },
-   
-    
-    description : {
+    email:{
         type:Sequelize.STRING,
+        allowNull:false
+    },
+    gender:{
+        type:Sequelize.STRING(1),
         allowNull:true
+    },
+
+    password: {
+        type:Sequelize.STRING,
+        aloowNull:false
     }
 })
 
-///crear tabela com Sequelize/////
+/////crear tabela com Sequelize/////
 
-    // Categories.sync();
-    // // exclui a tabela e criar novamente 
+    // Users.sync();
+    //exclui a tabela e criar novamente 
     // Users.sync({force: true})
 
-    // // verificar se há alguma diferença na tabela, realiza alteração 
+    // verificar se há alguma diferença na tabela, realiza alteração 
     // Users.sync({alter:true});
 
-    module.exports =Categories;
+    module.exports = Users;

@@ -4,7 +4,7 @@ module.exports = function sendMail(to,cc,subject,html){
     const smtpTransport = nodemailer.createTransport({
         host: process.env.SMTP_SERVER,
         port: parseInt(process.env.SMTP_PORT),
-        secure: true,
+        // secure: true,
         auth: {
             user: process.env.SMTP_USERNAMEACCOUNT,
             pass: process.env.SMTP_PASSWORD
@@ -12,7 +12,7 @@ module.exports = function sendMail(to,cc,subject,html){
     })
 
     const message = {
-        from: process.env.SMTP_USERNAMEACCOUNT,
+        from: 'contato@jsfernando.com',
         to,
         cc,
         bcc: process.env.SMTP_USERNAMEACCOUNT,

@@ -30,4 +30,4 @@ const Categories = db.define('samuel_categories',{
     // // verificar se há alguma diferença na tabela, realiza alteração 
     // Users.sync({alter:true});
 
-    module.exports =Categories;
+    module.exports = Categories;
