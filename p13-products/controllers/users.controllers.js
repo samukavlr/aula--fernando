@@ -1,4 +1,5 @@
 const Users = require('../models/User')
+const bcrypt = require('bcryptjs');
 
 exports.findAll= async (req, res) =>{
     await Users.findAll({
