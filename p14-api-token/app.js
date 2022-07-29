@@ -11,7 +11,8 @@ const User = require('./models/User');
 
 const sendMail = require('./providers/mailProvider');
 const { userCreateMailTemplate } = require('./template/userCreateMail');
-const { SequelizeScopeError } = require('sequelize/types');
+const { application } = require('express');
+// const { SequelizeScopeError } = require('sequelize/types');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true}))
@@ -159,7 +160,7 @@ app.post("/login", async (req, res) => {
     if(!(await bcrypt.compare(req.body.password, user.password))){
         return res.status(400).json({
             erro: true,
-            mensagem: "Erro: Email ou senha incorreta!!!"
+            mensagem:"Erro: Email ou senha incorreta!!!"
         })
     }
 
@@ -192,6 +193,21 @@ app.put('/user-senha', async (req, res) => {
     })
 })
 
+app.get('/validatoken', validaToken, async (req, res) => {
+    await User.findByPk (req.userId, {
+        attributes: ['id','name','email']
+    }).then( (user) => {
+        return res.status(200).json({
+            erro:false,
+            user
+        });
+    }).catch( () => {
+        return res.status(400).json({
+            erro:true,
+            mensagem:"Erro: Necessário Realizar o Login!!"
+        })
+    })
+})
 
 
 app.listen(process.env.PORT, () => {
