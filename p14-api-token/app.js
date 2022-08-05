@@ -24,12 +24,12 @@ app.use( (req, res, next) =>{
     app.use(cors());
     next();
 })
-
+//***home*** */
 app.get("/", function (request, response) {
     response.send("Serviço API Rest iniciada...");
 })
 
-app.get("/users", validaToken, async (req, res) =>{
+app.get("/users",validaToken,async (req, res) =>{
     await User.findAll({
         attributes: ['id', 'name', 'email', 'gender'],
         order:[['name', 'ASC']]
@@ -49,7 +49,7 @@ app.get("/users", validaToken, async (req, res) =>{
 
 })
 
-app.get('/user/:id', async (req, res) => {
+app.get('/user/:id',validaToken,async (req, res) => {
     const { id } = req.params;
     try {
         // await User.findAll({ where: {id: id}})
@@ -72,23 +72,23 @@ app.get('/user/:id', async (req, res) => {
     }
 });
 
-app.post("/user", async (req, res) => {
+app.post("/user",validaToken, async (req, res) => {
     var dados = req.body;
     dados.password = await bcrypt.hash(dados.password, 8);
    
     await User.create(dados)
     .then( ()=>{
         /* enviar e-mail */
-        let to = dados.email;
-        let cc = '';
-        let subject = `Sua conta foi criada com sucesso!`;
+        // let to = dados.email;
+        // let cc = '';
+        // let subject = `Sua conta foi criada com sucesso!`;
 
-        let mailBody = userCreateMailTemplate({
-            name: dados.name,
-            email: dados.email,
-            gender: dados.gender
-        })
-        sendMail(to, cc, subject , mailBody);
+        // let mailBody = userCreateMailTemplate({
+        //     name: dados.name,
+        //     email: dados.email,
+        //     gender: dados.gender
+        // })
+        // sendMail(to, cc, subject , mailBody);
         /* ************* */
 
         return res.json({
@@ -103,7 +103,7 @@ app.post("/user", async (req, res) => {
     })
 })
 
-app.put("/user", async (req, res) => {
+app.put("/user",validaToken,async (req, res) => {
     const { id } = req.body;
 
     await User.update(req.body, {where: {id}})
@@ -120,7 +120,7 @@ app.put("/user", async (req, res) => {
     })
 })
 
-app.delete("/user/:id", async (req, res) => {
+app.delete("/user/:id",validaToken, async (req, res) => {
     const { id } = req.params;
     await User.destroy({ where: {id}})
     .then( () => {
@@ -136,7 +136,7 @@ app.delete("/user/:id", async (req, res) => {
     });
 });
 
-app.post("/login", async (req, res) => {
+app.post("/login",async (req, res) => {
 
     await sleep(2000)
     function sleep(ms){
@@ -175,7 +175,7 @@ app.post("/login", async (req, res) => {
     })
 })
 
-app.put('/user-senha', async (req, res) => {
+app.put('/user-senha',validaToken, async (req, res) => {
     const {id, password } = req.body;
     var senhaCrypt = await bcrypt.hash(password, 8);
 
@@ -193,7 +193,7 @@ app.put('/user-senha', async (req, res) => {
     })
 })
 
-app.get('/validatoken', validaToken, async (req, res) => {
+app.get('/validatoken', async (req, res) => {
     await User.findByPk (req.userId, {
         attributes: ['id','name','email']
     }).then( (user) => {
