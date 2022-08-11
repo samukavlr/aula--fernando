@@ -4,7 +4,7 @@ require('dotenv').config()
 var cors= require('cors')
 
 const Categories = require('./models/Categories');
-const Products= require('./models/Products');
+
 
 app.use( (req, res, next) =>{
     res.header("Access-Control-Allow-Origin", "*");
