@@ -35,7 +35,7 @@ exports.findOne= async (req, res) => {
         }
         res.status(200).json({
             erro:false,
-            categorias
+            users
         })
     } catch (err){
         res.status(400).json({
@@ -70,6 +70,8 @@ exports.create= async (req, res) =>{
 
 ///////////ALTERAR/////////////
  exports.update= async (req, res) => {
+    var dados = req.body;
+    dados.password = await bcrypt.hash(dados.password, 8);
     const { id } = req.body;
 
     await Users.update(req.body, {where: {id}})

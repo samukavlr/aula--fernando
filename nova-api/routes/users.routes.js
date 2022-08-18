@@ -1,11 +1,12 @@
 const usersRoutes = require('express').Router();
 const users = require('../controllers/users.controllers')
+const { validaToken } = require('../middlewares/auth')
 
-usersRoutes.get('/all',users.findAll)
-usersRoutes.get('/show/:id',users.findOne)
-usersRoutes.post('/create',users.create)
-usersRoutes.put('/update',users.update)
-usersRoutes.delete('/delete/:id',users.delete)
+usersRoutes.get('/all',validaToken,users.findAll)
+usersRoutes.get('/show/:id',validaToken,users.findOne)
+usersRoutes.post('/create',validaToken,users.create)
+usersRoutes.put('/update',validaToken,users.update)
+usersRoutes.delete('/delete/:id',validaToken,users.delete)
 usersRoutes.post('/login',users.login)
 
 

@@ -1,5 +1,5 @@
 module.exports = function sendMail(to,cc,subject,html){
-    const nodemailer = require('nodemailer');
+    const ndoemailer = require('nodemailer');
 
     const smtpTransport = nodemailer.createTransport({
         host: process.env.SMTP_SERVER,
