@@ -35,8 +35,6 @@ module.exports = {
                 erro: true,
                 mensagem: 'Erro: Necessário realizar Login'
             })
-               
         }
-
     }    
 }

@@ -8,8 +8,13 @@ router.use('/categories',categoriesRoutes);
 const productsRoutes=require('./products.routes')
 router.use('/products',productsRoutes);
 
-///Route in products
+///Route in users
 const usersRoutes=require('./users.routes')
 router.use('/users',usersRoutes);
+
+const usersRoutes=require('./users.routes')
+router.use('/users',usersRoutes);
+
+
 
 module.exports= router;
